@@ -49,7 +49,7 @@
 import { ref, computed } from 'vue'
 
 
-import AddNoteDialog from './AddNoteDialog.vue'
+import AddNoteDialog from './CreateNote.vue'
 
 
 const props = defineProps({
