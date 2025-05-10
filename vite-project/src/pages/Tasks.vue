@@ -42,12 +42,6 @@
           </v-list-item>
         </v-list>
       </v-card-text>
-      <div class="d-flex justify-center mb-4">
-        <v-btn class="me-2" @click="saveNotes" color="primary"
-          >Сохранить в файл</v-btn
-        >
-        <v-btn @click="loadNotes" color="primary">Загрузить из файла</v-btn>
-      </div>
     </v-card>
 
     <!-- {{ showDialog }} -->
@@ -60,6 +54,8 @@ import { ref, computed, onMounted } from "vue";
 import CreateNote from "@/components/CreateNote.vue";
 // import apiNotes from "@/services/apiNotes.ts";
 import { getTasks } from "../services/taskApi";
+
+
 
 const search = ref(""); //
 const showDialog = ref(false);
@@ -105,7 +101,19 @@ const filteredNotes = computed(() => {
   );
 });
 
-const createNote = (newNote) => {(
+
+const refreshTask = async()=>{
+  const tasks = await getTasks();
+    
+  notes.value = tasks;
+
+  console.log(tasks);
+  console.log(notes);
+  console.log(notes.value);
+
+};
+
+const createNote = async(newNote) => {(
     newNote.lastname,
     newNote.name,
     newNote.surname,
@@ -114,7 +122,8 @@ const createNote = (newNote) => {(
     newNote.content
   );
   // notes.value = apiNotes.getNotes();
-  notes.value.unshift(newNote);
+ // notes.value.push(newNote);
+await refreshTask();
 };
 
 // const allNotes = apiNotes.getNotes();
@@ -141,16 +150,8 @@ const createNote = (newNote) => {(
 //   }
 // };
 
-onMounted(async()=>{
-  const tasks = await getTasks();
-    
-  notes.value = tasks;
-  console.log(tasks);
-  console.log(notes);
-  console.log(notes.value);
+ onMounted(refreshTask);
 
-  
-})
 </script>
 
 

@@ -4,7 +4,7 @@ import axios from 'axios';
 export const wrapperApi = async (method:string, url:string, data?:Record<string,string|number>) => {
 try{
     const response = await axios({method, url, data});
-    if(response.status === 200){
+    if(response.status === 200 || 201){
         return response.data;
     }
     throw new Error("Ошибка выполнения запроса");

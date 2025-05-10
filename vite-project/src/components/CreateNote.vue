@@ -58,7 +58,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn color="grey" @click="model = false">Отмена</v-btn>
-          <v-btn color="primary" @click="validateSave"> Добавить </v-btn>
+          <v-btn color="primary" @click="addNoteJson" > Добавить </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -68,8 +68,18 @@
   <script setup>
 import { VDateInput } from "vuetify/labs/VDateInput";
 import { ref, reactive } from "vue";
-import { shallowRef } from "vue";
 import { computed } from "vue";
+
+import { addTask } from "../services/taskApi";
+ 
+// import { refreshTask } from "../pages/Tasks.vue";
+
+const props = defineProps({
+  parentFunction: {
+    type: Function,
+    required: true
+  }
+});
 
 const model = defineModel();
 
@@ -108,12 +118,22 @@ const noteInfoRules = [
   (v) => !!v || "Срок выполнения задачи обязательно для заполнения",
 ];
 
-const validateSave = async () => {
+// const validateSave = async () => {
+ 
+// };
+
+const addNoteJson = async()=>{
+ 
   const { valid } = await form.value.validate();
   if (valid) {
     console.log("Форма валидна!");
 
+    const add = await addTask(note.value);
+    console.log(`Добавленная запись ${add}`);
+ 
     emit("add-note", note.value);
+    
+   
     console.log(note.value);
 
     note.value = {
@@ -125,6 +145,12 @@ const validateSave = async () => {
       content: "",
     };
     model.value = false;
+
+    
+
+ 
   }
+
+
 };
 </script>
