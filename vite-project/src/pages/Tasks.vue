@@ -63,12 +63,8 @@ import { getTasks } from "../services/taskApi";
 
 const search = ref(""); //
 const showDialog = ref(false);
-const notes = ref([{lastname: "Лысенко",
-  name: "Диана",
-  surname: "Сергеевнв",
-  daterange: "05/10/2025 - 05/17/2025",
-  title: "Задание",
-  content: "Написать код"} ]);
+let notes = ref([]);
+
 
 
 
@@ -147,7 +143,13 @@ const createNote = (newNote) => {(
 
 onMounted(async()=>{
   const tasks = await getTasks();
+    
+  notes.value = tasks;
   console.log(tasks);
+  console.log(notes);
+  console.log(notes.value);
+
+  
 })
 </script>
 
