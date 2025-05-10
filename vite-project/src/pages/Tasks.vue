@@ -58,12 +58,17 @@
   <script setup>
 import { ref, computed, onMounted } from "vue";
 import CreateNote from "@/components/CreateNote.vue";
-import apiNotes from "@/services/apiNotes.ts";
+// import apiNotes from "@/services/apiNotes.ts";
 import { getTasks } from "../services/taskApi";
 
 const search = ref(""); //
 const showDialog = ref(false);
-const notes = ref([]);
+const notes = ref([{lastname: "Лысенко",
+  name: "Диана",
+  surname: "Сергеевнв",
+  daterange: "05/10/2025 - 05/17/2025",
+  title: "Задание",
+  content: "Написать код"} ]);
 
 
 
@@ -104,8 +109,7 @@ const filteredNotes = computed(() => {
   );
 });
 
-const createNote = (newNote) => {
-  apiNotes.addNote(
+const createNote = (newNote) => {(
     newNote.lastname,
     newNote.name,
     newNote.surname,
@@ -113,33 +117,33 @@ const createNote = (newNote) => {
     newNote.title,
     newNote.content
   );
-  notes.value = apiNotes.getNotes();
+  // notes.value = apiNotes.getNotes();
   notes.value.unshift(newNote);
 };
 
-const allNotes = apiNotes.getNotes();
-console.log(allNotes.value);
+// const allNotes = apiNotes.getNotes();
+// console.log(allNotes.value);
 
-const deleteNote = (index) => {
+ const deleteNote = (index) => {
   notes.value.splice(index, 1);
 };
 
-const saveNotes = async () => {
-  const success = await apiNotes.saveToFile();
-  if (success) {
-    alert("Заметки успешно сохранены!");
-  } else {
-    alert("Ошибка при сохранении заметок");
-  }
-};
+// const saveNotes = async () => {
+//   const success = await apiNotes.saveToFile();
+//   if (success) {
+//     alert("Заметки успешно сохранены!");
+//   } else {
+//     alert("Ошибка при сохранении заметок");
+//   }
+// };
 
-const loadNotes = async () => {
-  const loadedNotes = await apiNotes.loadFromFile();
-  if (loadedNotes.length > 0) {
-    notes.value = loadedNotes;
-    alert(`Загружено ${loadedNotes.length} заметок`);
-  }
-};
+// const loadNotes = async () => {
+//   const loadedNotes = await apiNotes.loadFromFile();
+//   if (loadedNotes.length > 0) {
+//     notes.value = loadedNotes;
+//     alert(`Загружено ${loadedNotes.length} заметок`);
+//   }
+// };
 
 onMounted(async()=>{
   const tasks = await getTasks();
