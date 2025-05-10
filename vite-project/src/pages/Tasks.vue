@@ -56,14 +56,16 @@
 </template>
   
   <script setup>
-import { ref, computed } from "vue";
-const search = ref(""); //
-const showDialog = ref(false);
-
+import { ref, computed, onMounted } from "vue";
 import CreateNote from "@/components/CreateNote.vue";
 import apiNotes from "@/services/apiNotes.ts";
+import { getTasks } from "../services/taskApi";
 
+const search = ref(""); //
+const showDialog = ref(false);
 const notes = ref([]);
+
+
 
 const fullName = (note) => {
   return [note.lastname, note.name, note.surname]
@@ -138,6 +140,11 @@ const loadNotes = async () => {
     alert(`Загружено ${loadedNotes.length} заметок`);
   }
 };
+
+onMounted(async()=>{
+  const tasks = await getTasks();
+  console.log(tasks);
+})
 </script>
 
 
