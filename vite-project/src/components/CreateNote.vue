@@ -3,8 +3,11 @@
     <v-dialog v-model="model">
       <v-card>
         <v-card-title>Добавить заметку</v-card-title>
+        
         <v-card-text class="d-flex flex-column my-2">
-          <v-text-field 
+
+          <!-- <div class="border-md"> -->
+            <v-text-field 
             class="my-2"
             v-model="note.lastname"
             label="Фамилия"
@@ -27,6 +30,8 @@
             :rules="fullNameRules"
             required
           />
+          <!-- </div> -->
+          
 
           <v-date-input
             class="my-2"
@@ -86,6 +91,7 @@ const model = defineModel();
 const emit = defineEmits(["add-note"]);
 
 const note = ref({
+   id: "",
   lastname: "",
   name: "",
   surname: "",

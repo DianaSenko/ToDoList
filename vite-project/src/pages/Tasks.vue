@@ -17,7 +17,7 @@
 
         <v-list>
           <v-list-item
-            v-for="(note, index) in filteredNotes"
+            v-for="(note) in filteredNotes"
             :key="note.id"
             :title="note.title"
             lines="two"
@@ -37,7 +37,7 @@
             </v-list-item-subtitle>
 
             <template v-slot:append>
-              <v-btn icon="mdi-delete" @click="deleteNote(index)" />
+              <v-btn icon="mdi-delete" @click="deleteNote(note.id)" />
             </template>
           </v-list-item>
         </v-list>
@@ -53,7 +53,7 @@
 import { ref, computed, onMounted } from "vue";
 import CreateNote from "@/components/CreateNote.vue";
 // import apiNotes from "@/services/apiNotes.ts";
-import { getTasks } from "../services/taskApi";
+import { getTasks,deleteTask } from "../services/taskApi";
 
 
 
@@ -114,6 +114,7 @@ const refreshTask = async()=>{
 };
 
 const createNote = async(newNote) => {(
+    newNote.id,
     newNote.lastname,
     newNote.name,
     newNote.surname,
@@ -129,8 +130,16 @@ await refreshTask();
 // const allNotes = apiNotes.getNotes();
 // console.log(allNotes.value);
 
- const deleteNote = (index) => {
-  notes.value.splice(index, 1);
+ const deleteNote = async(id) => {
+  console.log(id); 
+  notes.value.splice(id, 1);
+  await deleteTask(id);
+ 
+
+  //const tasks = await getTasks();
+ // notes.value = tasks;
+
+  
 };
 
 // const saveNotes = async () => {
