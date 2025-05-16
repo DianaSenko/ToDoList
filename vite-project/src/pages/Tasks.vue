@@ -113,7 +113,7 @@ const refreshTask = async()=>{
 
 };
 
-const createNote = async(newNote) => {(
+const createNote = (newNote) => {(
     newNote.id,
     newNote.lastname,
     newNote.name,
@@ -124,22 +124,16 @@ const createNote = async(newNote) => {(
   );
   // notes.value = apiNotes.getNotes();
  // notes.value.push(newNote);
-await refreshTask();
+refreshTask();
 };
 
 // const allNotes = apiNotes.getNotes();
 // console.log(allNotes.value);
 
  const deleteNote = async(id) => {
-  console.log(id); 
-  notes.value.splice(id, 1);
   await deleteTask(id);
- 
-
-  //const tasks = await getTasks();
- // notes.value = tasks;
-
-  
+  //  notes.value.splice(id, 1);
+  refreshTask();
 };
 
 // const saveNotes = async () => {
