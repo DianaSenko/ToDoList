@@ -17,7 +17,7 @@
 
         <v-list>
           <v-list-item
-            v-for="(note) in filteredNotes"
+            v-for="note in filteredNotes"
             :key="note.id"
             :title="note.title"
             lines="two"
@@ -27,10 +27,6 @@
             <v-list-item-subtitle>
               <div>Создатель заметки: {{ fullName(note) }}</div>
             </v-list-item-subtitle>
-
-            <!-- <v-list-item-subtitle>
-            <div>Время  выполения: {{ note.daterange }}</div>
-            </v-list-item-subtitle> -->
 
             <v-list-item-subtitle>
               <div>Время выполения: {{ dateRange(note) }}</div>
@@ -52,17 +48,11 @@
   <script setup>
 import { ref, computed, onMounted } from "vue";
 import CreateNote from "@/components/CreateNote.vue";
-// import apiNotes from "@/services/apiNotes.ts";
-import { getTasks,deleteTask } from "../services/taskApi";
+import { getTasks, deleteTask } from "../services/taskApi";
 
-
-
-const search = ref(""); //
+const search = ref(""); 
 const showDialog = ref(false);
 let notes = ref([]);
-
-
-
 
 const fullName = (note) => {
   return [note.lastname, note.name, note.surname]
@@ -101,62 +91,33 @@ const filteredNotes = computed(() => {
   );
 });
 
-
-const refreshTask = async()=>{
+const refreshTask = async () => {
   const tasks = await getTasks();
-    
+
   notes.value = tasks;
 
   console.log(tasks);
   console.log(notes);
   console.log(notes.value);
-
 };
 
-const createNote = (newNote) => {(
-    newNote.id,
+const createNote = (newNote) => {
+  newNote.id,
     newNote.lastname,
     newNote.name,
     newNote.surname,
     newNote.daterange,
     newNote.title,
-    newNote.content
-  );
-  // notes.value = apiNotes.getNotes();
- // notes.value.push(newNote);
-refreshTask();
-};
-
-// const allNotes = apiNotes.getNotes();
-// console.log(allNotes.value);
-
- const deleteNote = async(id) => {
-  await deleteTask(id);
-  //  notes.value.splice(id, 1);
+    newNote.content;
+  // notes.value.push(newNote);
   refreshTask();
 };
 
-// const saveNotes = async () => {
-//   const success = await apiNotes.saveToFile();
-//   if (success) {
-//     alert("Заметки успешно сохранены!");
-//   } else {
-//     alert("Ошибка при сохранении заметок");
-//   }
-// };
+const deleteNote = async (id) => {
+  await deleteTask(id);
+  // notes.value.splice(id, 1);
+  refreshTask();
+};
 
-// const loadNotes = async () => {
-//   const loadedNotes = await apiNotes.loadFromFile();
-//   if (loadedNotes.length > 0) {
-//     notes.value = loadedNotes;
-//     alert(`Загружено ${loadedNotes.length} заметок`);
-//   }
-// };
-
- onMounted(refreshTask);
-
+onMounted(refreshTask);
 </script>
-
-
-  <style>
-</style>

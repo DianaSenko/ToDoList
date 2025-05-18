@@ -5,9 +5,8 @@
         <v-card-title>Добавить заметку</v-card-title>
 
         <v-card-text class="d-flex flex-column my-2">
-          <fieldset class="fio-group">
+          <fieldset class="group">
             <legend>ФИО</legend>
-            <!-- <div class="border-md"> -->
             <v-text-field
               class="my-2"
               v-model="note.lastname"
@@ -32,7 +31,7 @@
               required
             />
           </fieldset>
-          <fieldset class="fio-group">
+          <fieldset class="group">
             <legend>Срок выполнения заметки</legend>
             <v-date-input
               class="my-2"
@@ -44,7 +43,7 @@
               required
             />
           </fieldset>
-          <fieldset class="fio-group">
+          <fieldset class="group">
             <legend>Информация о заметке</legend>
             <v-text-field
               class="my-2"
@@ -82,8 +81,6 @@ import { computed } from "vue";
 import { lodash } from "lodash";
 
 import { addTask } from "../services/taskApi";
-
-// import { refreshTask } from "../pages/Tasks.vue";
 
 const props = defineProps({
   parentFunction: {
@@ -130,10 +127,6 @@ const noteInfoRules = [
   (v) => !!v || "Срок выполнения задачи обязательно для заполнения",
 ];
 
-// const validateSave = async () => {
-
-// };
-
 const addNoteJson = async () => {
   const { valid } = await form.value.validate();
   if (valid) {
@@ -157,14 +150,14 @@ const addNoteJson = async () => {
 };
 </script>
 <style>
-.fio-group {
-  border: 2px solid #3B71CA;
+.group {
+  border: 2px solid #3b71ca;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 20px;
 }
-.fio-group legend {
-  color: #3B71CA;
+.group legend {
+  color: #3b71ca;
   font-weight: bold;
   padding: 0 10px;
 }
