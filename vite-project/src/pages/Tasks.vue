@@ -16,67 +16,27 @@
         />
 
         <v-list>
-          <v-list-item
-            v-for="note in filteredNotes"
-            :key="note.id"
-            :title="note.title"
-            lines="two"
-          >
-            <v-list-item-title>{{ note.content }} </v-list-item-title>
-
-            <v-list-item-subtitle>
-              <div>Создатель заметки: {{ fullName(note) }}</div>
-            </v-list-item-subtitle>
-
-            <v-list-item-subtitle>
-              <div>Время выполения: {{ dateRange(note) }}</div>
-            </v-list-item-subtitle>
-
-            <template v-slot:append>
-              <v-btn icon="mdi-delete" @click="deleteNote(note.id)" />
-            </template>
-          </v-list-item>
+          <NoteList
+          :notes="filteredNotes"
+          @delete="deleteNote"/>
         </v-list>
       </v-card-text>
     </v-card>
 
     <!-- {{ showDialog }} -->
-    <CreateNote v-model="showDialog" @add-note="createNote" />
+    <CreateNote v-model="showDialog" @add-note="refreshTask" />
   </v-container>
 </template>
   
   <script setup>
 import { ref, computed, onMounted } from "vue";
 import CreateNote from "@/components/CreateNote.vue";
+import NoteList from "@/components/NoteList.vue";
 import { getTasks, deleteTask } from "../services/taskApi";
 
 const search = ref(""); 
 const showDialog = ref(false);
 let notes = ref([]);
-
-const fullName = (note) => {
-  return [note.lastname, note.name, note.surname]
-    .filter((part) => part?.trim())
-    .join(" ");
-};
-
-const dateRange = (note) => {
-  const formatDate = (isoString) => {
-    const date = new Date(isoString);
-    const options = {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      timeZone: "UTC",
-    };
-    return date.toLocaleDateString("ru-RU", options);
-  };
-  const firstDate = formatDate(note.daterange[0]);
-
-  const lastDate = formatDate(note.daterange[note.daterange.length - 1]);
-
-  return `${firstDate} - ${lastDate}`;
-};
 
 const filteredNotes = computed(() => {
   const query = search.value.toLowerCase();
@@ -99,18 +59,6 @@ const refreshTask = async () => {
   console.log(tasks);
   console.log(notes);
   console.log(notes.value);
-};
-
-const createNote = (newNote) => {
-  newNote.id,
-    newNote.lastname,
-    newNote.name,
-    newNote.surname,
-    newNote.daterange,
-    newNote.title,
-    newNote.content;
-  // notes.value.push(newNote);
-  refreshTask();
 };
 
 const deleteNote = async (id) => {
