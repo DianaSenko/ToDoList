@@ -22,7 +22,6 @@
         </v-list>
       </v-card-text>
     </v-card>
-
     <!-- {{ showDialog }} -->
     <CreateNote v-model="showDialog" @add-note="refreshTask" />
   </v-container>
