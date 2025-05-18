@@ -82,13 +82,6 @@ import { lodash } from "lodash";
 
 import { addTask } from "../services/taskApi";
 
-const props = defineProps({
-  parentFunction: {
-    type: Function,
-    required: true,
-  },
-});
-
 const model = defineModel();
 
 const emit = defineEmits(["add-note"]);

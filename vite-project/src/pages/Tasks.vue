@@ -24,7 +24,7 @@
       </v-card-text>
     </v-card>
     <!-- {{ showDialog }} -->
-    <CreateNote v-model="showDialog" @add-note="refreshTask" />
+    <CreateNote v-model="showDialog" @add-note="getTasksList" />
   </v-container>
 </template>
   
@@ -38,9 +38,9 @@ const search = ref("");
 const showDialog = ref(false);
 let notes = ref([]);
 
-const refreshTask = async () => {
-  const tasks = await getTasks();
-  notes.value = tasks;
+const getTasksList = async () => {
+   notes.value = await getTasks();
+   
   
 };
 
@@ -60,8 +60,8 @@ const filteredNotes = computed(() => {
 const deleteNote = async (id) => {
   await deleteTask(id);
   // notes.value.splice(id, 1);
-  refreshTask();
+  getTasksList();
 };
 
-onMounted(refreshTask);
+onMounted(getTasksList);
 </script>
