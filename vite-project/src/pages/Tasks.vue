@@ -18,7 +18,9 @@
         <v-list>
           <NoteList
           :notes="filteredNotes"
-          @delete="deleteNote"/>
+          @delete="deleteNote"
+          v-model="showDialog"
+          />
        
         </v-list>
       </v-card-text>

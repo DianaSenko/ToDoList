@@ -14,10 +14,12 @@
       
       <v-list-item-subtitle>
         <div>Время выполнения: {{ dateRange(note) }}</div>
+        <!-- dateRange(note) -->
       </v-list-item-subtitle>
       
       <template v-slot:append>
         <v-btn icon="mdi-delete" @click="$emit('delete', note.id)" />
+              <!-- <v-btn icon="mdi-pencil" @click="$emit('change', note.id)" @click="showDialog = true" /> -->
       </template>
     </v-list-item>
   </v-list>
@@ -32,6 +34,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['delete']);
+
 
 const fullName = (note) => {
   return [note.lastname, note.name, note.surname]
@@ -50,9 +53,9 @@ const dateRange = (note) => {
     };
     return date.toLocaleDateString("ru-RU", options);
   };
-  const firstDate = formatDate(note.daterange[0]);
+  const firstDate = formatDate(note.datefirst);
 
-  const lastDate = formatDate(note.daterange[note.daterange.length - 1]);
+  const lastDate = formatDate(note.datelast);
 
   return `${firstDate} - ${lastDate}`;
 };

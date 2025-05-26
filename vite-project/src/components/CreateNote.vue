@@ -35,13 +35,21 @@
             <legend>Срок выполнения заметки</legend>
             <v-date-input
               class="my-2"
-              v-model="note.daterange"
-              label="Срок выполнения задачи"
-              multiple="range"
+              v-model="note.datefirst"
+              label="Дата начала"
               variant="outlined"
               :rules="noteInfoRules"
               required
             />
+                  <v-date-input
+              class="my-2"
+              v-model="note.datelast"
+              label="Дата конца"
+              variant="outlined"
+              :rules="noteInfoRules"
+              required
+            />
+            {{ note.daterange }}
           </fieldset>
           <fieldset class="group">
             <legend>Информация о заметке</legend>
@@ -91,7 +99,8 @@ const note = ref({
   lastname: "",
   name: "",
   surname: "",
-  daterange: "",
+  datefirst: "",
+  datelast: "",//
   title: "",
   content: "",
 });
@@ -134,7 +143,8 @@ const addNoteJson = async () => {
       lastname: "",
       name: "",
       surname: "",
-      daterange: "",
+      datefirst: "",
+      datelast: "",//
       title: "",
       content: "",
     };
