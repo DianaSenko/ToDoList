@@ -19,13 +19,13 @@
           <NoteList
           :notes="filteredNotes"
           @delete="deleteNote"
-          v-model="showDialog"
+     
           />
        
         </v-list>
       </v-card-text>
     </v-card>
-    <!-- {{ showDialog }} -->
+    <!-- {{ showDialog }} @update-note="getTasksList" -->
     <CreateNote v-model="showDialog" @add-note="getTasksList" />
   </v-container>
 </template>
@@ -42,8 +42,6 @@ let notes = ref([]);
 
 const getTasksList = async () => {
    notes.value = await getTasks();
-   
-  
 };
 
 const filteredNotes = computed(() => {
@@ -52,10 +50,10 @@ const filteredNotes = computed(() => {
     note.lastname?.toLowerCase().includes(query) || 
     note.name?.toLowerCase().includes(query) ||
     note.surname?.toLowerCase().includes(query) ||
-    // note.daterange?.includes(query) ||
+    note.datefirst?.includes(query) ||
+    note.datelast?.includes(query) ||
     note.title?.toLowerCase().includes(query) ||
     note.content?.toLowerCase().includes(query)
-    
   );
 });
 

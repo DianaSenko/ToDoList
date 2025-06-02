@@ -2,7 +2,8 @@
   <v-form ref="form">
     <v-dialog v-model="model">
       <v-card>
-        <v-card-title>Добавить заметку</v-card-title>
+      
+  <v-card-title>{{ editNote ? 'Просмотр заметки' : 'Добавить заметку' }}</v-card-title>
 
         <v-card-text class="d-flex flex-column my-2">
           <fieldset class="group">
@@ -13,6 +14,7 @@
               label="Фамилия"
               variant="outlined"
               :rules="fullNameRules"
+               :readonly="!!editNote"
             />
             <v-text-field
               class="my-2"
@@ -21,6 +23,7 @@
               variant="outlined"
               :rules="fullNameRules"
               required
+               :readonly="!!editNote"
             />
             <v-text-field
               class="my-2"
@@ -29,6 +32,7 @@
               variant="outlined"
               :rules="fullNameRules"
               required
+               :readonly="!!editNote"
             />
           </fieldset>
           <fieldset class="group">
@@ -40,6 +44,7 @@
               variant="outlined"
               :rules="noteInfoRules"
               required
+               :readonly="!!editNote"
             />
                   <v-date-input
               class="my-2"
@@ -48,6 +53,7 @@
               variant="outlined"
               :rules="noteInfoRules"
               required
+               :readonly="!!editNote"
             />
             {{ note.daterange }}
           </fieldset>
@@ -60,6 +66,7 @@
               variant="outlined"
               :rules="noteInfoRules"
               required
+               :readonly="!!editNote"
             />
             <v-textarea
               class="my-2"
@@ -68,13 +75,15 @@
               variant="outlined"
               :rules="noteInfoRules"
               rows="3"
+               :readonly="!!editNote"
             />
           </fieldset>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="grey" @click="model = false">Отмена</v-btn>
-          <v-btn color="primary" @click="addNoteJson"> Добавить </v-btn>
+          <v-btn color="grey" @click="model = false" >Отмена</v-btn>
+          <v-btn color="primary" @click="addNoteJson"  v-if="!editNote" > Добавить </v-btn>
+          <v-btn color="primary" @click="addNoteJson" v-if="editNote"> Изменить </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -83,7 +92,7 @@
   
   <script setup>
 import { VDateInput } from "vuetify/labs/VDateInput";
-import { ref, reactive } from "vue";
+import { ref, reactive,watch } from "vue";
 import { computed } from "vue";
 
 import { lodash } from "lodash";
@@ -91,6 +100,10 @@ import { lodash } from "lodash";
 import { addTask } from "../services/taskApi";
 
 const model = defineModel();
+
+const props = defineProps({
+  editNote: Object
+});
 
 const emit = defineEmits(["add-note"]);
 
@@ -104,7 +117,28 @@ const note = ref({
   title: "",
   content: "",
 });
+
+
+// Заполняем форму данными заметки при открытии диалога
+watch(() => props.editNote, (newVal) => {
+  if (newVal) {
+    note.value = { ...newVal };
+  } else {
+    note.value = {
+      id: null,
+      lastname: "",
+      name: "",
+      surname: "",
+      datefirst: "",
+      datelast: "",
+      title: "",
+      content: "",
+    };
+  }
+});
+
 const form = ref(null);
+
 const fullNameRules = [
   // Обязательное поле
   (v) => !!v || "Поле обязательно для заполнения",
@@ -152,6 +186,7 @@ const addNoteJson = async () => {
   }
 };
 </script>
+
 <style>
 .group {
   border: 2px solid #3b71ca;

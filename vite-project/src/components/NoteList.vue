@@ -19,13 +19,23 @@
       
       <template v-slot:append>
         <v-btn icon="mdi-delete" @click="$emit('delete', note.id)" />
-              <!-- <v-btn icon="mdi-pencil" @click="$emit('change', note.id)" @click="showDialog = true" /> -->
+       <v-btn icon="mdi-pencil" @click="openEditDialog(note)" /> 
+              <!--  -->
+              {{ showDialog }}
       </template>
+     
     </v-list-item>
-  </v-list>
+    <CreateNote  v-model="showDialog"
+       :edit-note="currentNote"/> 
+  </v-list>  
 </template>
 
 <script setup>
+import CreateNote from "@/components/CreateNote.vue";
+import { ref, reactive } from "vue";
+const showDialog=ref(false);
+const currentNote = ref(null);
+
 const props = defineProps({
   notes: {
     type: Array,
@@ -33,8 +43,15 @@ const props = defineProps({
   }
 });
 
+
+
 const emit = defineEmits(['delete']);
 
+
+const openEditDialog = (note) => {
+  currentNote.value = note;
+  showDialog.value = true;
+};
 
 const fullName = (note) => {
   return [note.lastname, note.name, note.surname]
