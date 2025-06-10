@@ -7,4 +7,4 @@ export const addTask = async (data: Record<string, string | number>) => await wr
 
 export const deleteTask = async (id: number) => await wrapperApi('delete', `${API_URL}/tasks/${id}`,);
 
-export const updateTask = async (id: number,data: Record<string, string | number>) => await wrapperApi('update', `${API_URL}/tasks/${id}`, data);
+export const updateTask = async (id: number, data: Record<string, string | number>) =>  await wrapperApi('put', `${API_URL}/tasks/${id}`, data);

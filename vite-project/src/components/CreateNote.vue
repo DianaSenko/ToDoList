@@ -2,9 +2,9 @@
   <v-form ref="form">
     <v-dialog v-model="model">
       <v-card>
-      
-  <v-card-title>{{ editNote ? 'Просмотр заметки' : 'Добавить заметку' }}</v-card-title>
-
+        <v-card-title>{{
+          editNote ? "Редактирование заметки" : "Добавить заметку"
+        }}</v-card-title>
         <v-card-text class="d-flex flex-column my-2">
           <fieldset class="group">
             <legend>ФИО</legend>
@@ -14,7 +14,7 @@
               label="Фамилия"
               variant="outlined"
               :rules="fullNameRules"
-               :readonly="!!editNote"
+              :readonly="false"
             />
             <v-text-field
               class="my-2"
@@ -23,7 +23,7 @@
               variant="outlined"
               :rules="fullNameRules"
               required
-               :readonly="!!editNote"
+              :readonly="false"
             />
             <v-text-field
               class="my-2"
@@ -32,7 +32,7 @@
               variant="outlined"
               :rules="fullNameRules"
               required
-               :readonly="!!editNote"
+              :readonly="false"
             />
           </fieldset>
           <fieldset class="group">
@@ -44,18 +44,17 @@
               variant="outlined"
               :rules="noteInfoRules"
               required
-               :readonly="!!editNote"
+              :readonly="false"
             />
-                  <v-date-input
+            <v-date-input
               class="my-2"
               v-model="note.datelast"
               label="Дата конца"
               variant="outlined"
               :rules="noteInfoRules"
               required
-               :readonly="!!editNote"
+              :readonly="false"
             />
-            {{ note.daterange }}
           </fieldset>
           <fieldset class="group">
             <legend>Информация о заметке</legend>
@@ -66,7 +65,7 @@
               variant="outlined"
               :rules="noteInfoRules"
               required
-               :readonly="!!editNote"
+              :readonly="false"
             />
             <v-textarea
               class="my-2"
@@ -75,115 +74,118 @@
               variant="outlined"
               :rules="noteInfoRules"
               rows="3"
-               :readonly="!!editNote"
+              :readonly="false"
             />
           </fieldset>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="grey" @click="model = false" >Отмена</v-btn>
-          <v-btn color="primary" @click="addNoteJson"  v-if="!editNote" > Добавить </v-btn>
-          <v-btn color="primary" @click="addNoteJson" v-if="editNote"> Изменить </v-btn>
+          <v-btn color="grey" @click="model = false">Отмена</v-btn>
+          <v-btn color="primary" @click="addNoteJson" v-if="!editNote"
+            >Добавить</v-btn
+          >
+          <v-btn color="primary" @click="updateNoteJson" v-if="editNote"
+            >Сохранить</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
   </v-form>
 </template>
-  
-  <script setup>
+
+<script setup>
 import { VDateInput } from "vuetify/labs/VDateInput";
-import { ref, reactive,watch } from "vue";
-import { computed } from "vue";
-
+import { ref, watch } from "vue";
 import { lodash } from "lodash";
+import { addTask, updateTask } from "../services/taskApi";
 
-import { addTask } from "../services/taskApi";
-
-const model = defineModel();
-
-const props = defineProps({
-  editNote: Object
-});
-
-const emit = defineEmits(["add-note"]);
-
+const form = ref(null);
 const note = ref({
   id: lodash,
   lastname: "",
   name: "",
   surname: "",
   datefirst: "",
-  datelast: "",//
+  datelast: "",
   title: "",
   content: "",
 });
 
+const model = defineModel();
+const props = defineProps({
+  editNote: Object,
+});
+const emit = defineEmits(["add-note", "update-note"]);
 
 // Заполняем форму данными заметки при открытии диалога
-watch(() => props.editNote, (newVal) => {
-  if (newVal) {
-    note.value = { ...newVal };
-  } else {
-    note.value = {
-      id: null,
-      lastname: "",
-      name: "",
-      surname: "",
-      datefirst: "",
-      datelast: "",
-      title: "",
-      content: "",
-    };
-  }
-});
-
-const form = ref(null);
+watch(
+  () => props.editNote,
+  (newVal) => {
+    if (newVal) {
+      note.value = { ...newVal };
+    } else {
+      note.value = {
+        id: "",
+        lastname: "",
+        name: "",
+        surname: "",
+        datefirst: "",
+        datelast: "",
+        title: "",
+        content: "",
+      };
+    }
+  },
+  { immediate: true }
+);
 
 const fullNameRules = [
-  // Обязательное поле
   (v) => !!v || "Поле обязательно для заполнения",
-
-  // Минимальная длина
   (v) => (v && v.length >= 2) || "Поле должно содержать минимум 2 символа",
-
-  // Максимальная длина
   (v) => (v && v.length <= 50) || "Поле слишком длинное",
-
-  // Проверка на допустимые символы (только буквы, дефисы и пробелы)
   (v) =>
     /^[A-Za-zА-Яа-яЁё\s-]+$/.test(v) || "Поле содержит недопустимые символы",
-
-  // Проверка на корректное написание (первая буква заглавная)
   (v) =>
     (v && v[0] === v[0]?.toUpperCase()) ||
     "Поле должно начинаться с заглавной буквы",
 ];
+
 const noteInfoRules = [
-  // Обязательное поле
   (v) => !!v || "Срок выполнения задачи обязательно для заполнения",
 ];
 
 const addNoteJson = async () => {
   const { valid } = await form.value.validate();
   if (valid) {
-    console.log("Форма валидна!");
-
     const add = await addTask(note.value);
     console.log(`Добавленная запись ${add}`);
-
     emit("add-note", note.value);
-
-    note.value = {
-      lastname: "",
-      name: "",
-      surname: "",
-      datefirst: "",
-      datelast: "",//
-      title: "",
-      content: "",
-    };
+    resetForm();
     model.value = false;
   }
+};
+
+const updateNoteJson = async () => {
+  const { valid } = await form.value.validate();
+  if (valid) {
+    const update = await updateTask(note.value.id, note.value);
+    console.log(`Измененная запись ${update}`);
+    emit("update-note", note.value);
+    resetForm();
+    model.value = false;
+  }
+};
+
+const resetForm = () => {
+  note.value = {
+    lastname: "",
+    name: "",
+    surname: "",
+    datefirst: "",
+    datelast: "",
+    title: "",
+    content: "",
+  };
 };
 </script>
 

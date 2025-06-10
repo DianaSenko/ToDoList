@@ -7,46 +7,39 @@
       lines="two"
     >
       <v-list-item-title>{{ note.content }}</v-list-item-title>
-      
+
       <v-list-item-subtitle>
         <div>Создатель заметки: {{ fullName(note) }}</div>
       </v-list-item-subtitle>
-      
+
       <v-list-item-subtitle>
         <div>Время выполнения: {{ dateRange(note) }}</div>
-        <!-- dateRange(note) -->
       </v-list-item-subtitle>
-      
+
       <template v-slot:append>
         <v-btn icon="mdi-delete" @click="$emit('delete', note.id)" />
-       <v-btn icon="mdi-pencil" @click="openEditDialog(note)" /> 
-              <!--  -->
-              {{ showDialog }}
+        <v-btn icon="mdi-pencil" @click="openEditDialog(note)" />
+        {{ showDialog }}
       </template>
-     
     </v-list-item>
-    <CreateNote  v-model="showDialog"
-       :edit-note="currentNote"/> 
-  </v-list>  
+    <CreateNote v-model="showDialog" :edit-note="currentNote" />
+  </v-list>
 </template>
 
 <script setup>
 import CreateNote from "@/components/CreateNote.vue";
 import { ref, reactive } from "vue";
-const showDialog=ref(false);
+const showDialog = ref(false);
 const currentNote = ref(null);
 
 const props = defineProps({
   notes: {
     type: Array,
-    required: true
-  }
+    required: true,
+  },
 });
 
-
-
-const emit = defineEmits(['delete']);
-
+const emit = defineEmits(["delete"]);
 
 const openEditDialog = (note) => {
   currentNote.value = note;
