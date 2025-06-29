@@ -123,6 +123,7 @@ watch(
   (newVal) => {
     if (newVal) {
       note.value = { ...newVal };
+      
     } else {
       note.value = {
         id: "",
@@ -134,6 +135,7 @@ watch(
         title: "",
         content: "",
       };
+      
     }
   },
   { immediate: true }

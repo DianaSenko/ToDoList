@@ -15,13 +15,14 @@
           variant="outlined"
         />
         <v-list>
-          <NoteList :notes="filteredNotes" @delete="deleteNote" />
+          <NoteList :notes="filteredNotes" @delete="deleteNote" @update="updateNote" />
         </v-list>
       </v-card-text>
     </v-card>
     <!-- {{ showDialog }} @update-note="getTasksList" -->
     <CreateNote
       v-model="showDialog"
+      :editNote="note"
       @add-note="getTasksList"
       @update-note="getTasksList"
     />
@@ -29,17 +30,20 @@
 </template>
   
   <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import CreateNote from "@/components/CreateNote.vue";
 import NoteList from "@/components/NoteList.vue";
 import { getTasks, deleteTask } from "../services/taskApi";
 
 const search = ref("");
 const showDialog = ref(false);
-let notes = ref([]);
+const notes = ref([]);
+let note = reactive({});
+
 
 const getTasksList = async () => {
   notes.value = await getTasks();
+  console.log(notes.value);
 };
 
 const filteredNotes = computed(() => {
@@ -60,6 +64,11 @@ const deleteNote = async (id) => {
   await deleteTask(id);
   // notes.value.splice(id, 1);
   getTasksList();
+};
+
+const updateNote = async (task) => {
+  showDialog.value=true;
+  note = task;
 };
 
 onMounted(getTasksList);
