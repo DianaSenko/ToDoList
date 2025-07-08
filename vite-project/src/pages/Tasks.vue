@@ -15,7 +15,7 @@
           variant="outlined"
         />
         <v-list>
-          <NoteList :notes="filteredNotes" @delete="deleteNote" @update="updateNote" />
+          <NoteList :notes="filteredNotes" @delete="deleteNote" @update="updateNote" @info="infoNote" />
         </v-list>
       </v-card-text>
     </v-card>
@@ -26,6 +26,11 @@
       @add-note="getTasksList"
       @update-note="getTasksList"
     />
+     <Info 
+      v-if="false"
+      :editNote="note"
+      @info-note="getTasksList"
+    />
   </v-container>
 </template>
   
@@ -34,6 +39,10 @@ import { ref, reactive, computed, onMounted } from "vue";
 import CreateNote from "@/components/CreateNote.vue";
 import NoteList from "@/components/NoteList.vue";
 import { getTasks, deleteTask } from "../services/taskApi";
+
+import Info from '@/pages/Info.vue';
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const search = ref("");
 const showDialog = ref(false);
@@ -69,7 +78,20 @@ const deleteNote = async (id) => {
 const updateNote = async (task) => {
   showDialog.value=true;
   note = task;
+  console.log(note);
 };
+
+ 
+  const infoNote = async (task) => {
+   router.push({
+    path: '/info',
+    query: { 
+      note: JSON.stringify(task) // Сериализуем объект заметки
+    }
+  });
+  console.log(note);
+};
+
 
 onMounted(getTasksList);
 </script>

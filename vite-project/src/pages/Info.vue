@@ -1,9 +1,8 @@
 <template>
-  <v-form ref="form">
-    <v-dialog v-model="model">
-      <v-card>
+    <v-form ref="form">
+  <v-container>
         <v-card-title>{{
-          editNote ? "Редактирование заметки" : "Добавить заметку"
+          "Информация по заметке"
         }}</v-card-title>
         <v-card-text class="d-flex flex-column my-2">
           <fieldset class="group">
@@ -80,24 +79,22 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="grey" @click="model = false">Отмена</v-btn>
-          <v-btn color="primary" @click="addNoteJson" v-if="!editNote"
-            >Добавить</v-btn
-          >
-          <v-btn color="primary" @click="updateNoteJson" v-if="editNote"
-            >Сохранить</v-btn
-          >
+          <v-btn color="grey" @click="backToTasksPage">Отмена</v-btn>
+          <v-btn color="primary" @click="updateNoteJson">Сохранить</v-btn>
         </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-form>
+      </v-container>
+      </v-form>
 </template>
 
 <script setup>
 import { VDateInput } from "vuetify/labs/VDateInput";
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { lodash } from "lodash";
-import { addTask, updateTask } from "../services/taskApi";
+import { updateTask } from "../services/taskApi";
+
+import { useRoute, useRouter} from 'vue-router';
+const route = useRoute(); //отвечает за принятие данных
+const router = useRouter(); // отвечает за переход по страницам
 
 const form = ref(null);
 const note = ref({
@@ -115,34 +112,9 @@ const model = defineModel();
 const props = defineProps({
   editNote: Object,
 });
-const emit = defineEmits(["add-note", "update-note"]);
+const emit = defineEmits(["info-note"]);
 
 // Заполняем форму данными заметки при открытии диалога
-watch(
-  () => props.editNote,
-  (newVal) => {
-    if (newVal) {
-      note.value = { ...newVal };
-      console.log(newVal, "успех");
-      
-    } else {
-         
-      console.log(newVal, "провал");
-      note.value = {
-        id: "",
-        lastname: "",
-        name: "",
-        surname: "",
-        datefirst: "",
-        datelast: "",
-        title: "",
-        content: "",
-      };
-      
-    }
-  },
-  { immediate: true }
-);
 
 const fullNameRules = [
   (v) => !!v || "Поле обязательно для заполнения",
@@ -159,23 +131,12 @@ const noteInfoRules = [
   (v) => !!v || "Срок выполнения задачи обязательно для заполнения",
 ];
 
-const addNoteJson = async () => {
-  const { valid } = await form.value.validate();
-  if (valid) {
-    const add = await addTask(note.value);
-    console.log(`Добавленная запись ${add}`);
-    emit("add-note", note.value);
-    resetForm();
-    model.value = false;
-  }
-};
-
 const updateNoteJson = async () => {
   const { valid } = await form.value.validate();
   if (valid) {
     const update = await updateTask(note.value.id, note.value);
     console.log(`Измененная запись ${update}`);
-    emit("update-note", note.value);
+    emit("info-note", note.value);
     resetForm();
     model.value = false;
   }
@@ -192,6 +153,17 @@ const resetForm = () => {
     content: "",
   };
 };
+
+  const backToTasksPage = async () => {
+  router.push('/');
+};
+
+onMounted(() => {
+  if (route.query.note) {
+    note.value = JSON.parse(route.query.note);
+  }
+});
+
 </script>
 
 <style>

@@ -19,7 +19,9 @@
       <template v-slot:append>
         <v-btn icon="mdi-delete" @click="$emit('delete', note.id)" />
         <v-btn icon="mdi-pencil" @click="$emit('update', note)" />
+        <v-btn icon="mdi-information" @click="$emit('info', note)"  />
         <!-- {{ showDialog }} -->
+        
       </template>
     </v-list-item>
   </v-list>
@@ -33,7 +35,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["delete","update"]);
+const emit = defineEmits(["delete","update","info"]);
 
 const fullName = (note) => {
   return [note.lastname, note.name, note.surname]
