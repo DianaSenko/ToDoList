@@ -137,22 +137,22 @@ const updateNoteJson = async () => {
     const update = await updateTask(note.value.id, note.value);
     console.log(`Измененная запись ${update}`);
     emit("info-note", note.value);
-    resetForm();
+    backToTasksPage();
     model.value = false;
   }
 };
 
-const resetForm = () => {
-  note.value = {
-    lastname: "",
-    name: "",
-    surname: "",
-    datefirst: "",
-    datelast: "",
-    title: "",
-    content: "",
-  };
-};
+// const resetForm = () => {
+//   note.value = {
+//     lastname: "",
+//     name: "",
+//     surname: "",
+//     datefirst: "",
+//     datelast: "",
+//     title: "",
+//     content: "",
+//   };
+// };
 
   const backToTasksPage = async () => {
   router.push('/');
