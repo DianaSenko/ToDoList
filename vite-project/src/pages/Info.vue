@@ -157,6 +157,7 @@ const updateNoteJson = async () => {
     emit("info-note", note.value);
     backToTasksPage();
     model.value = false;
+    alert('Запись сохранена!');
   }
 };
 
