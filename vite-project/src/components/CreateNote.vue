@@ -1,10 +1,10 @@
 <template>
   <v-form ref="form">
-    <v-dialog v-model="model">
+    <v-dialog v-model="model" @click:outside="closeDialog" @keydown.esc="closeDialog">
       <v-card>
-        <v-card-title>{{
-          editNote ? "Редактирование заметки" : "Добавить заметку"
-        }}</v-card-title>
+          <v-card-title>
+    {{ isEditMode ? "Редактирование заметки" : "Добавить заметку" }}{{ editNote }}
+  </v-card-title>
         <v-card-text class="d-flex flex-column my-2">
           <fieldset class="group">
             <legend>ФИО</legend>
@@ -80,11 +80,11 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="grey" @click="model = false">Отмена</v-btn>
-          <v-btn color="primary" @click="addNoteJson" v-if="!editNote"
+          <v-btn color="grey" @click="closeDialog">Отмена</v-btn>
+          <v-btn color="primary" @click="addNoteJson" v-if="!isEditMode"
             >Добавить</v-btn
           >
-          <v-btn color="primary" @click="updateNoteJson" v-if="editNote"
+          <v-btn color="primary" @click="updateNoteJson" v-if="isEditMode"
             >Сохранить</v-btn
           >
         </v-card-actions>
@@ -95,7 +95,7 @@
 
 <script setup>
 import { VDateInput } from "vuetify/labs/VDateInput";
-import { ref, watch } from "vue";
+import { ref, watch, computed} from "vue";
 import { lodash } from "lodash";
 import { addTask, updateTask } from "../services/taskApi";
 
@@ -114,8 +114,9 @@ const note = ref({
 const model = defineModel();
 const props = defineProps({
   editNote: Object,
+  default:()=>({})
 });
-const emit = defineEmits(["add-note", "update-note"]);
+const emit = defineEmits(["add-note", "update-note","clear-edit"]);
 
 // Заполняем форму данными заметки при открытии диалога
 watch(
@@ -144,6 +145,12 @@ watch(
   { immediate: true }
 );
 
+const closeDialog = () => {
+  emit('clear-edit');
+  model.value = false;
+  resetForm();
+};
+
 const fullNameRules = [
   (v) => !!v || "Поле обязательно для заполнения",
   (v) => (v && v.length >= 2) || "Поле должно содержать минимум 2 символа",
@@ -158,6 +165,10 @@ const fullNameRules = [
 const noteInfoRules = [
   (v) => !!v || "Срок выполнения задачи обязательно для заполнения",
 ];
+
+const isEditMode = computed(() => {
+  return props.editNote && Object.keys(props.editNote).length > 0;
+});
 
 const addNoteJson = async () => {
   const { valid } = await form.value.validate();
@@ -177,6 +188,7 @@ const updateNoteJson = async () => {
     console.log(`Измененная запись ${update}`);
     emit("update-note", note.value);
     resetForm();
+    emit('clear-edit');
     model.value = false;
   }
 };

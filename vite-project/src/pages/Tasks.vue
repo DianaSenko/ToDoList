@@ -25,6 +25,7 @@
       :editNote="note"
       @add-note="getTasksList"
       @update-note="getTasksList"
+      @clear-edit="clearNote"
     />
      <Info 
       v-if="false"
@@ -47,7 +48,7 @@ const router = useRouter();
 const search = ref("");
 const showDialog = ref(false);
 const notes = ref([]);
-let note = reactive({});
+const note = ref({});
 
 
 const getTasksList = async () => {
@@ -77,10 +78,12 @@ const deleteNote = async (id) => {
 
 const updateNote = async (task) => {
   showDialog.value=true;
-  note = task;
+  note.value = task;
   console.log(note);
 };
-
+const clearNote = () => {
+  note.value = {}; // Явно очищаем объект
+};
  
   const infoNote = async (task) => {
    router.push({
