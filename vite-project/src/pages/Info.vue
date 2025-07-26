@@ -34,6 +34,19 @@
               :readonly="false"
             />
           </fieldset>
+            <fieldset v-if = "true" class="group" >
+            <legend>Статус</legend>
+            <v-select 
+              class="my-2"
+              v-model="note.status"
+              :items="items"
+              label="Статус"
+              variant="outlined"
+              required
+              :readonly="false">
+            </v-select>
+          </fieldset>
+          
           <fieldset class="group">
             <legend>Срок выполнения заметки</legend>
             <v-date-input
@@ -107,6 +120,11 @@ const note = ref({
   title: "",
   content: "",
 });
+const items = ref([
+  'В работе',
+  'На утверждение',
+  'Готово',
+]);
 
 const model = defineModel();
 const props = defineProps({
@@ -141,18 +159,6 @@ const updateNoteJson = async () => {
     model.value = false;
   }
 };
-
-// const resetForm = () => {
-//   note.value = {
-//     lastname: "",
-//     name: "",
-//     surname: "",
-//     datefirst: "",
-//     datelast: "",
-//     title: "",
-//     content: "",
-//   };
-// };
 
   const backToTasksPage = async () => {
   router.push('/');

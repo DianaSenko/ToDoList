@@ -6,6 +6,7 @@
     {{ isEditMode ? "Редактирование заметки" : "Добавить заметку" }}{{ editNote }}
   </v-card-title>
         <v-card-text class="d-flex flex-column my-2">
+        
           <fieldset class="group">
             <legend>ФИО</legend>
             <v-text-field
@@ -32,6 +33,15 @@
               variant="outlined"
               :rules="fullNameRules"
               required
+              :readonly="false"
+            />
+          </fieldset>
+            <fieldset v-if = "false" class="group" >
+            <legend>Статус</legend>
+            <v-text-field
+              class="my-2"
+              v-model="note.status"
+              variant="outlined"
               :readonly="false"
             />
           </fieldset>
@@ -102,6 +112,7 @@ import { addTask, updateTask } from "../services/taskApi";
 const form = ref(null);
 const note = ref({
   id: lodash,
+  status: "Новая",
   lastname: "",
   name: "",
   surname: "",
@@ -123,23 +134,13 @@ watch(
   () => props.editNote,
   (newVal) => {
     if (newVal) {
-      note.value = { ...newVal };
+      note.value = { status: "Новая", ...newVal }; // очень важно, по умолчанию мы заполняем поле статус значение новая здесь!!!!!!
       console.log(newVal, "успех");
       
     } else {
          
       console.log(newVal, "провал");
-      note.value = {
-        id: "",
-        lastname: "",
-        name: "",
-        surname: "",
-        datefirst: "",
-        datelast: "",
-        title: "",
-        content: "",
-      };
-      
+      resetForm();
     }
   },
   { immediate: true }
@@ -195,6 +196,8 @@ const updateNoteJson = async () => {
 
 const resetForm = () => {
   note.value = {
+    id: lodash, 
+    status: "Новая",
     lastname: "",
     name: "",
     surname: "",
