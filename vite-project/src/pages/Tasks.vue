@@ -6,7 +6,6 @@
         <v-spacer />
         <v-btn color="primary" icon="mdi-plus" @click="showDialog = true" />
       </v-card-title>
-
       <v-card-text>
         <v-text-field
           v-model="search"
@@ -19,7 +18,6 @@
         </v-list>
       </v-card-text>
     </v-card>
-    <!-- {{ showDialog }} @update-note="getTasksList" -->
     <CreateNote
       v-model="showDialog"
       :editNote="note"
@@ -49,7 +47,6 @@ const search = ref("");
 const showDialog = ref(false);
 const notes = ref([]);
 const note = ref({});
-
 
 const getTasksList = async () => {
   notes.value = await getTasks();
@@ -82,14 +79,14 @@ const updateNote = async (task) => {
   console.log(note);
 };
 const clearNote = () => {
-  note.value = {}; // Явно очищаем объект
+  note.value = {}; // явно очищаем объект
 };
  
   const infoNote = async (task) => {
    router.push({
     path: '/info',
     query: { 
-      note: JSON.stringify(task) // Сериализуем объект заметки
+      note: JSON.stringify(task)
     }
   });
   console.log(note);

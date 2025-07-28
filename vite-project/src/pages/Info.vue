@@ -46,7 +46,20 @@
               :readonly="false">
             </v-select>
           </fieldset>
-          
+          <fieldset v-if = "true" class="group" >
+            <legend>Исполнитель</legend>
+            <v-select 
+              class="my-2"
+              v-model="note.idtaskexecutor"
+              :items="executors"
+              item-title="name"
+              item-value="id"
+              label="Исполнитель"
+              variant="outlined"
+              required
+              :readonly="false">
+            </v-select>
+          </fieldset>
           <fieldset class="group">
             <legend>Срок выполнения заметки</legend>
             <v-date-input
@@ -105,6 +118,8 @@ import { ref, watch, onMounted } from "vue";
 import { lodash } from "lodash";
 import { updateTask } from "../services/taskApi";
 
+import { getExecutors} from "../services/executorsApi";
+
 import { useRoute, useRouter} from 'vue-router';
 const route = useRoute(); //отвечает за принятие данных
 const router = useRouter(); // отвечает за переход по страницам
@@ -112,6 +127,8 @@ const router = useRouter(); // отвечает за переход по стр�
 const form = ref(null);
 const note = ref({
   id: lodash,
+  status: "",
+  idtaskexecutor:"",
   lastname: "",
   name: "",
   surname: "",
@@ -126,13 +143,13 @@ const items = ref([
   'Готово',
 ]);
 
+const executors = ref([]);
+
 const model = defineModel();
 const props = defineProps({
   editNote: Object,
 });
 const emit = defineEmits(["info-note"]);
-
-// Заполняем форму данными заметки при открытии диалога
 
 const fullNameRules = [
   (v) => !!v || "Поле обязательно для заполнения",
@@ -165,10 +182,16 @@ const updateNoteJson = async () => {
   router.push('/');
 };
 
+const onInfoPageOpen = async () => {
+  const response = await getExecutors();
+  executors.value = Object.values(response).filter(Boolean);
+};
+
 onMounted(() => {
   if (route.query.note) {
     note.value = JSON.parse(route.query.note);
   }
+  onInfoPageOpen();
 });
 
 </script>

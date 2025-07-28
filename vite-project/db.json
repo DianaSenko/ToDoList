@@ -1,37 +1,42 @@
 {
   "tasks": [
     {
-      "id": "a646",
-      "status": "На утверждение",
-      "lastname": "Рывапр",
-      "name": "ОВапро",
-      "surname": "Овапро",
-      "datefirst": "2025-07-17T20:00:00.000Z",
-      "datelast": "2025-07-30T20:00:00.000Z",
-      "title": "мисаи",
-      "content": "мисми"
-    },
-    {
-      "id": "35ca",
       "status": "Новая",
-      "lastname": "Jfdghj",
-      "name": "Jfghjk",
-      "surname": "JFghjk",
+      "idtaskexecutor": "3",
+      "id": "d166",
+      "lastname": "Hdfghj",
+      "name": "Рокапро",
+      "surname": "Urtyhj",
       "datefirst": "2025-07-09T20:00:00.000Z",
-      "datelast": "2025-07-24T20:00:00.000Z",
-      "title": "vsddf",
-      "content": "dfsdf"
+      "datelast": "2025-07-29T20:00:00.000Z",
+      "title": "jралрвлар",
+      "content": "варлявралы"
     },
     {
-      "id": "d5b7",
+      "id": "8eee",
       "status": "Новая",
-      "lastname": "Jdfghjk",
-      "name": "Jdfghjk",
-      "surname": "Jfghjk",
-      "datefirst": "2025-07-16T20:00:00.000Z",
-      "datelast": "2025-07-24T20:00:00.000Z",
-      "title": "fsfs",
-      "content": "dfsdf"
+      "idtaskexecutor": "2",
+      "lastname": "Jdfgh",
+      "name": "Hdghj",
+      "surname": "FFdfghjk",
+      "datefirst": "2025-07-23T20:00:00.000Z",
+      "datelast": "2025-07-30T20:00:00.000Z",
+      "title": "jhkfuhskhgfj",
+      "content": "djfhksjkfhk"
+    }
+  ],
+  "taskexecutors": [
+    {
+      "id": "1",
+      "name": "Косатова Ольга Алексеевна"
+    },
+    {
+      "id": "2",
+      "name": "Чухрий Анна Викторовна"
+    },
+    {
+      "id": "3",
+      "name": "Осович Валентин Андреевич"
     }
   ]
 }

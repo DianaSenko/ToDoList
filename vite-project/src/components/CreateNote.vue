@@ -1,9 +1,9 @@
 <template>
   <v-form ref="form">
-    <v-dialog v-model="model" @click:outside="closeDialog" @keydown.esc="closeDialog">
+    <v-dialog v-model="model" @click:outside="closeDialog" @keydown.esc="closeDialog" @after-enter="onDialogOpen">
       <v-card>
           <v-card-title>
-    {{ isEditMode ? "Редактирование заметки" : "Добавить заметку" }}{{ editNote }}
+    {{ isEditMode ? "Редактирование заметки" : "Добавить заметку" }}
   </v-card-title>
         <v-card-text class="d-flex flex-column my-2">
         
@@ -44,6 +44,20 @@
               variant="outlined"
               :readonly="false"
             />
+          </fieldset>
+          <fieldset v-if = "true" class="group" >
+            <legend>Исполнитель</legend>
+            <v-select 
+              class="my-2"
+              v-model="note.idtaskexecutor"
+              :items="executors"
+              item-title="name"
+              item-value="id"
+              label="Исполнитель"
+              variant="outlined"
+              required
+              :readonly="false">
+            </v-select>
           </fieldset>
           <fieldset class="group">
             <legend>Срок выполнения заметки</legend>
@@ -109,10 +123,15 @@ import { ref, watch, computed} from "vue";
 import { lodash } from "lodash";
 import { addTask, updateTask } from "../services/taskApi";
 
+import { getExecutors} from "../services/executorsApi";
+
+const executors = ref([]);
+
 const form = ref(null);
 const note = ref({
   id: lodash,
   status: "Новая",
+  idtaskexecutor:"",
   lastname: "",
   name: "",
   surname: "",
@@ -121,6 +140,7 @@ const note = ref({
   title: "",
   content: "",
 });
+
 
 const model = defineModel();
 const props = defineProps({
@@ -134,7 +154,10 @@ watch(
   () => props.editNote,
   (newVal) => {
     if (newVal) {
-      note.value = { status: "Новая", ...newVal }; // очень важно, по умолчанию мы заполняем поле статус значение новая здесь!!!!!!
+      note.value = { 
+      status: "Новая",
+      idtaskexecutor: newVal.idtaskexecutor || newVal.taskexecutor,
+      ...newVal }; // очень важно, по умолчанию мы заполняем поле статус значение новая здесь!!!!!!
       console.log(newVal, "успех");
       
     } else {
@@ -198,6 +221,7 @@ const resetForm = () => {
   note.value = {
     id: lodash, 
     status: "Новая",
+    idtaskexecutor: "",
     lastname: "",
     name: "",
     surname: "",
@@ -207,6 +231,13 @@ const resetForm = () => {
     content: "",
   };
 };
+
+const onDialogOpen = async () => {
+  const response = await getExecutors();
+  executors.value = Object.values(response).filter(Boolean);
+};
+
+
 </script>
 
 <style>
